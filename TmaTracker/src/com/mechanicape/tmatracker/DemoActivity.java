@@ -140,7 +140,7 @@ public class DemoActivity extends Activity {
         } else {
             try {
                 mSerialDevice.open();
-                mSerialDevice.setBaudRate(9600);
+                mSerialDevice.setBaudRate(57600);
             } catch (IOException e) {
                 Log.e(TAG, "Error setting up device: " + e.getMessage(), e);
                 mTitleTextView.setText("Error opening device: " + e.getMessage());

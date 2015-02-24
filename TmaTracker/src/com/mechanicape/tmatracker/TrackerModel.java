@@ -66,19 +66,20 @@ public final class TrackerModel implements LocationListener{
         for (int lineNr=0;lineNr<sentences.length;lineNr++)
         {
             sentence=sentences[lineNr];
-            if (sentence.startsWith("$GPRMC")) {
+            //if (sentence.startsWith("$GPRMC")) {
                 try 
                 {
                     
-                    String[] strValues = sentence.split(",");
+                    String[] strValues = sentence.split(" ");
                     
-                    double latitude;
-                    double longitude;
-                    
-                    latitude=this.parseNmeaLatitude(strValues[3], strValues[4]);
-                    longitude=this.parseNmeaLongitude(strValues[5], strValues[6]);
-                    
-                    float course = Float.parseFloat("0"+strValues[8]);
+                   
+                    String datetime=strValues[0]+" "+strValues[1];
+                    int age=Integer.parseInt(strValues[2]);
+                    double latitude=this.parseNmeaLatitude(strValues[3]);
+                    double longitude=this.parseNmeaLongitude(strValues[4]);
+                    float course = Float.parseFloat(strValues[5]);
+                    float speed = Float.parseFloat(strValues[6]);
+                    int sats=Integer.parseInt(strValues[7]);
                     
                     if (latitude!=0 && longitude!=0)
                     {
@@ -100,7 +101,7 @@ public final class TrackerModel implements LocationListener{
                 
                 
                 
-            }
+            //}
         }
         
     }
@@ -202,72 +203,30 @@ public final class TrackerModel implements LocationListener{
     public void onStatusChanged(String provider, int status, Bundle extras) {
     }
 
-    public double parseNmeaLatitude(String lat,String orientation){
+    public double parseNmeaLatitude(String lat){
         double latitude = 0.0;
-        if (lat != null && orientation != null && !lat.equals("") && !orientation.equals("")){
+        if (lat != null  && !lat.equals("") ){
             double temp1 = Double.parseDouble(lat);
             double temp2 = Math.floor(temp1/100); 
             double temp3 = (temp1/100 - temp2)/0.6;
-            if (orientation.equals("S")){
-                latitude = -(temp2+temp3);
-            } else if (orientation.equals("N")){
-                latitude = (temp2+temp3);
-            }
+            latitude = (temp2+temp3);
         }
         return latitude;
     }
-    public double parseNmeaLongitude(String lon,String orientation){
+    
+    public double parseNmeaLongitude(String lon){
         double longitude = 0.0;
-        if (lon != null && orientation != null && !lon.equals("") && !orientation.equals("")){
+        if (lon != null  && !lon.equals("") ){
             double temp1 = Double.parseDouble(lon);
             double temp2 = Math.floor(temp1/100); 
             double temp3 = (temp1/100 - temp2)/0.6;
-            if (orientation.equals("W")){
-                longitude = -(temp2+temp3);
-            } else if (orientation.equals("E")){
-                longitude = (temp2+temp3);
-            }
+            longitude = (temp2+temp3);
+            
         }
         return longitude;
     }
-    public float parseNmeaSpeed(String speed,String metric){
-        float meterSpeed = 0.0f;
-        if (speed != null && metric != null && !speed.equals("") && !metric.equals("")){
-            float temp1 = Float.parseFloat(speed)/3.6f;
-            if (metric.equals("K")){
-                meterSpeed = temp1;
-            } else if (metric.equals("N")){
-                meterSpeed = temp1*1.852f;
-            }
-        }
-        return meterSpeed;
-    }
-    public long parseNmeaTime(String time){
-        long timestamp = 0;
-        SimpleDateFormat fmt = new SimpleDateFormat("HHmmss.SSS");
-        fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-        try {
-            if (time != null && time != null){
-                long now = System.currentTimeMillis();
-                long today = now - (now %86400000L);
-                long temp1;
-                // sometime we don't have millisecond in the time string, so we have to reformat it 
-                temp1 = fmt.parse(String.format((Locale)null,"%010.3f", Double.parseDouble(time))).getTime();
-                long temp2 = today+temp1;
-                // if we're around midnight we could have a problem...
-                if (temp2 - now > 43200000L) {
-                    timestamp  = temp2 - 86400000L;
-                } else if (now - temp2 > 43200000L){
-                    timestamp  = temp2 + 86400000L;
-                } else {
-                    timestamp  = temp2;
-                }
-            }
-        } catch (Exception e) {
-            //Log.e(LOG_TAG, "Error while parsing NMEA time", e);
-        }
-        return timestamp;
-    }
+   
+   
     public byte computeChecksum(String s){
         byte checksum = 0;
         for (char c : s.toCharArray()){
