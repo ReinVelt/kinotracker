@@ -201,12 +201,12 @@ public class DemoActivity extends Activity {
                     }
                     
                     if (trackerModel.remoteLocation.getLatitude()!=0)
-                    {
+                    {                                                                                                                                                                                                                                                                                                                                   
                         MarkerOptions remoteOptions=new MarkerOptions();
                         remoteOptions.title("Remote");
                         remoteOptions.position(new LatLng(trackerModel.remoteLocation.getLatitude(),trackerModel.remoteLocation.getLongitude()));
-                        //String text="distance: "+Float.toString(trackerModel.myLocation.distanceTo(trackerModel.remoteLocation))+" meter\n";;
-                        //remoteOptions.snippet(text);
+                        String text=trackerModel.remoteLocation.getProvider();;
+                        remoteOptions.snippet(text);
                         remoteOptions.flat(false);
                         BitmapDescriptor remoteIcon=BitmapDescriptorFactory.fromResource(R.drawable.icon_targetlocation);
                         remoteOptions.icon(remoteIcon);
@@ -216,7 +216,7 @@ public class DemoActivity extends Activity {
                     
                     //float toTargetDirection=trackerModel.myLocation.bearingTo(trackerModel.remoteLocation);
                     //float toTargetDistance=trackerModel.myLocation.distanceTo(trackerModel.remoteLocation);
-                    LatLng cameraLatLng=new LatLng(trackerModel.myLocation.getLatitude(),trackerModel.myLocation.getLongitude());
+                    LatLng cameraLatLng=new LatLng(trackerModel.remoteLocation.getLatitude(),trackerModel.remoteLocation.getLongitude());
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng,17));
                     trackerModel.isUpdatedSinceLast=false;
                 }

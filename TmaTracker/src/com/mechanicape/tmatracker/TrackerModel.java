@@ -3,9 +3,12 @@
  */
 package com.mechanicape.tmatracker;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import com.mechanicape.tmatracker.DatabaseHelper;
 
 import android.content.Context;
 import android.location.Location;
@@ -20,7 +23,7 @@ import android.widget.Toast;
  *
  */
 public final class TrackerModel implements LocationListener{
-
+    public DatabaseHelper db ;
     public Location myLocation;
     public Location remoteLocation;
     private final Context mContext;
@@ -53,7 +56,7 @@ public final class TrackerModel implements LocationListener{
         remoteLocation.setLongitude(0);
         remoteLocation.setLatitude(0);
         remoteLocation.setBearing(0);
-        
+        db = new DatabaseHelper(context);
         this.mContext = context;
         getLocation();
     }
@@ -70,32 +73,38 @@ public final class TrackerModel implements LocationListener{
                 try 
                 {
                     
-                    String[] strValues = sentence.split(" ");
+                    String[] strValues = sentence.split("\t");
                     
                    
-                    String datetime=strValues[0]+" "+strValues[1];
-                    int age=Integer.parseInt(strValues[2]);
-                    double latitude=this.parseNmeaLatitude(strValues[3]);
-                    double longitude=this.parseNmeaLongitude(strValues[4]);
-                    float course = Float.parseFloat(strValues[5]);
-                    float speed = Float.parseFloat(strValues[6]);
-                    int sats=Integer.parseInt(strValues[7]);
-                    
+                    String date=strValues[0].trim();
+                    String time=strValues[1].trim();
+                    int age=Integer.parseInt(strValues[2].trim());
+                    double latitude=this.parseNmeaLatitude(strValues[3].trim());
+                    double longitude=this.parseNmeaLongitude(strValues[4].trim());
+                    float course = Float.parseFloat(strValues[5].trim());
+                    float speed = Float.parseFloat(strValues[6].trim());
+                    int sats=Integer.parseInt(strValues[7].trim());
+                    float battery=Float.parseFloat(strValues[8].trim());
+                    //Toast.makeText(mContext, String.valueOf(latitude), Toast.LENGTH_SHORT).show();
                     if (latitude!=0 && longitude!=0)
                     {
+                        remoteLocation.setTime(Dateformat..date+" "+time);
+                        remoteLocation.setSpeed(speed);
                         remoteLocation.setLatitude(latitude);
                         remoteLocation.setLongitude(longitude);
                         remoteLocation.setBearing(course);
-                        remoteLocation.setAccuracy(1);
+                        remoteLocation.setAccuracy((float)sats);
+                        this.addToTrack(remoteLocation);
                         
                     }
-                    this.addToTrack(remoteLocation);
+                    
                     
                     //Toast.makeText(mContext, remoteLocation.toString(), Toast.LENGTH_SHORT).show();
                     System.out.println("remote::latlon="+Double.toString(latitude)+","+Double.toString(longitude));
                 } 
                 catch (Exception e)
                 {
+                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
                 
                 
@@ -109,19 +118,7 @@ public final class TrackerModel implements LocationListener{
     
     public void addToTrack(Location location)
     {
-        /*int i=0;
-        if (track.length>0)
-        {
-            for (i=1; i<this.track.length;i++)
-            {
-                this.track[i-1]=this.track[i];
-            }
-            this.track[this.track.length-1]=location;
-        }
-        else
-        {
-            this.track[i]=location;
-        }*/
+        db.addToTrail(location.getProvider(),location.getTime(), (float) location.getLatitude(), (float) location.getLongitude(), (float) location.getBearing(), (float) location.getSpeed(), 0, 0);
        
     }
     
@@ -204,34 +201,13 @@ public final class TrackerModel implements LocationListener{
     }
 
     public double parseNmeaLatitude(String lat){
-        double latitude = 0.0;
-        if (lat != null  && !lat.equals("") ){
-            double temp1 = Double.parseDouble(lat);
-            double temp2 = Math.floor(temp1/100); 
-            double temp3 = (temp1/100 - temp2)/0.6;
-            latitude = (temp2+temp3);
-        }
-        return latitude;
+        return Double.parseDouble(lat);
     }
     
     public double parseNmeaLongitude(String lon){
-        double longitude = 0.0;
-        if (lon != null  && !lon.equals("") ){
-            double temp1 = Double.parseDouble(lon);
-            double temp2 = Math.floor(temp1/100); 
-            double temp3 = (temp1/100 - temp2)/0.6;
-            longitude = (temp2+temp3);
-            
-        }
-        return longitude;
+         return Double.parseDouble(lon);
     }
    
    
-    public byte computeChecksum(String s){
-        byte checksum = 0;
-        for (char c : s.toCharArray()){
-            checksum ^= (byte)c;            
-        }
-        return checksum;
-    }
+   
 }
