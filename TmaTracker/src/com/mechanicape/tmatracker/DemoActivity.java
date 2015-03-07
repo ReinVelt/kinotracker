@@ -22,7 +22,9 @@ package com.mechanicape.tmatracker;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.usb.UsbManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ScrollView;
@@ -36,6 +38,7 @@ import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -46,9 +49,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 /**
  * A sample Activity demonstrating USB-Serial support.
@@ -112,7 +118,7 @@ public class DemoActivity extends Activity {
         map.setContentDescription("Map with location of tracked object");
         map.setTrafficEnabled(true);
         trackerModel=new TrackerModel(this);
-        
+        drawHistoryTrail();
     }
 
     @Override
@@ -214,11 +220,15 @@ public class DemoActivity extends Activity {
                         //Toast.makeText(this, "remote", 0).show();
                     }
                     
+                    
                     //float toTargetDirection=trackerModel.myLocation.bearingTo(trackerModel.remoteLocation);
                     //float toTargetDistance=trackerModel.myLocation.distanceTo(trackerModel.remoteLocation);
                     LatLng cameraLatLng=new LatLng(trackerModel.remoteLocation.getLatitude(),trackerModel.remoteLocation.getLongitude());
+                    //CameraPosition.builder(cameraLatLng).bearing(trackerModel.myLocation.getBearing()).build();
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng,17));
                     trackerModel.isUpdatedSinceLast=false;
+                    
+                    drawHistoryTrail();
                 }
         }
         catch (Exception e)
@@ -245,6 +255,19 @@ public class DemoActivity extends Activity {
         }
         
         
+    }
+    
+    
+    private void drawHistoryTrail()
+    {
+        List<LatLng> trail=trackerModel.db.getTrailByName("Kino");
+        Polyline line = map.addPolyline(new PolylineOptions()
+        .addAll(trail)
+        .width(1)
+        .color(Color.RED));
+        
+    
+    
     }
 
 }

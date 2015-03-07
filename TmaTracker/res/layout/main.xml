@@ -8,12 +8,6 @@
    
 
 	
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"     
-        android:layout_gravity="right"      
-        android:text="Button" />
     
    
      
@@ -29,7 +23,7 @@
      <ScrollView
 		  android:id="@+id/demoScroller"
 		  android:layout_width="match_parent"
-		  android:layout_height="48dp"
+		  android:layout_height="10dp"
 		  android:layout_gravity="left">
 
       <TextView

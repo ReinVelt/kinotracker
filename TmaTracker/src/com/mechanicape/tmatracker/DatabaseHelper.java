@@ -5,6 +5,8 @@ package com.mechanicape.tmatracker;
 import java.util.ArrayList;
 //import java.util.Date;
 import java.util.List;
+
+import com.google.android.gms.maps.model.LatLng;
 //import java.util.Locale;
  
 import android.content.ContentValues;
@@ -12,6 +14,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Point;
+import android.location.Location;
 import android.util.Log;
 //@TODO - This file needs some refactoring. To many code in one file
 //        better split it up...one file per model should be nice
@@ -22,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LOG = "DatabaseHelper";
  
     // Database Version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
  
     // Database Name
     private static final String DATABASE_NAME = "tmatrackerdb";
@@ -50,13 +54,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             TRAIL_TRACKERID+    " STRING NOT NULL, "+
             TRAIL_LATITUDE +    " FLOAT NOT NULL,"+
             TRAIL_LONGITUDE+    " FLOAT NOT NULL,"  + 
-            TRAIL_COURSE+       " INTEGER NOT NULL, "+
-            TRAIL_SPEED +       " INTEGER NOT NULL," + 
+            TRAIL_COURSE+       " FLOAT NOT NULL, "+
+            TRAIL_SPEED +       " FLOAT NOT NULL," + 
             TRAIL_SATS +        " INTEGER NOT NULL,"+
             TRAIL_BATTERY+      " INTEGER NOT NULL"  + ")";
     
     
-    private static final String INSERT_TEST_TRAIL="INSERT INTO "+TABLE_TRAIL+" VALUES (null,0,'O',52.086335, 4.285606,0,0,0,0)";
+    private static final String INSERT_TEST_TRAIL="INSERT INTO "+TABLE_TRAIL+" VALUES (null,0,'Test',52.086335, 4.285606,0,0,0,0)";
    
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -93,6 +97,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(TRAIL_TRACKERID, trackerId);
         values.put(TRAIL_TIMESTAMP, timestamp);
+        values.put(TRAIL_TRACKERID, trackerId);
         values.put(TRAIL_LATITUDE, lat);
         values.put(TRAIL_LONGITUDE, lon);
         values.put(TRAIL_COURSE, course);
@@ -154,35 +159,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     
     /**
      * getting all players belonging to group
-     * *//*
-    public List<Player> getPlayersByGroupId(long group_id) {
-        List<Player> players = new ArrayList<Player>();
+     * */
+    public List<LatLng> getTrailByName(String name) 
+    {
+        List<LatLng> trail = new ArrayList<LatLng>();
         String selectQuery = 
         	"SELECT  * FROM " + 
-            TABLE_PLAYERS +" as P,"+TABLE_GROUPPLAYER +" as G "+
+               TABLE_TRAIL +
             " WHERE "+ 
-               "G."+GROUPPLAYER_GROUP_ID + "="+GROUP_ID+
-            " AND "+
-               "P."+PLAYER_ID + "=G."+GROUPPLAYER_PLAYER_ID;
+               TRAIL_TRACKERID + "='"+name+"'"+
+            " ORDER BY "+TRAIL_TIMESTAMP +" DESC"+
+            " LIMIT 100000";
         Log.e(LOG, selectQuery);
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
         // looping through all rows and adding to list
+        int cnt=0;
         if (c.moveToFirst()) {
             do {
-                Player p = new Player();
-                p.setId(c.getInt(c.getColumnIndex(PLAYER_ID)));
-                p.setName((c.getString(c.getColumnIndex(PLAYER_NAME))));
-                p.setHandicap(c.getInt(c.getColumnIndex(PLAYER_HANDICAP)));
-                p.setKey(c.getInt(c.getColumnIndex(PLAYER_KEY)));
-                p.setCreated(c.getInt(c.getColumnIndex(PLAYER_CREATED)));
+                
+                LatLng p = new LatLng(c.getDouble(c.getColumnIndex(TRAIL_LATITUDE)),c.getFloat(c.getColumnIndex(TRAIL_LONGITUDE)));
+               
+                
                 // adding to todo list
-                players.add(p.getId(),p);
+                trail.add(cnt++,p);
             } while (c.moveToNext());
         }
         c.close();
-        return players;
-    }*/
+        return trail;
+    }
     
     
     
