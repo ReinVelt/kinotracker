@@ -14,8 +14,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Point;
-import android.location.Location;
+
 import android.util.Log;
 //@TODO - This file needs some refactoring. To many code in one file
 //        better split it up...one file per model should be nice

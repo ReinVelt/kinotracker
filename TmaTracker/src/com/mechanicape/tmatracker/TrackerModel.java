@@ -16,7 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.text.format.DateFormat;
+
 import android.util.Log;
 import android.widget.Toast;
 
@@ -38,6 +38,9 @@ public final class TrackerModel implements LocationListener{
 
     // flag for GPS status
     boolean canGetLocation = false;
+    String debugRSSI;
+    String debugTDM[];
+    String debugCFG[];
     public boolean isUpdatedSinceLast=true;
     //public Location[] track=new Location[100];
  // The minimum distance to change Updates in meters
@@ -63,59 +66,64 @@ public final class TrackerModel implements LocationListener{
         getLocation();
     }
     
-    public void addNmeaData(String sentences[])
+    public void addDebugData(String sentence)
+    {
+       if (sentence.length()>1 && sentence.charAt(0)=='L')
+       {   
+           debugRSSI=sentence;
+           Toast.makeText(mContext, "DEBUG:"+sentence, Toast.LENGTH_SHORT).show();
+       }
+      
+    }
+    
+    public void addNmeaData(String sentence)
     {
 
-        String sentence="";
-        //Location previousLocation=this.remoteLocation;
-        for (int lineNr=0;lineNr<sentences.length;lineNr++)
-        {
-            sentence=sentences[lineNr];
+        
             //if (sentence.startsWith("$GPRMC")) {
                 try 
                 {
                     
                     String[] strValues = sentence.split("\t");
-                    
                    
-                    String date=strValues[0].trim();
-                    String time=strValues[1].trim();
-                    int age=Integer.parseInt(strValues[2].trim());
-                    String name=strValues[3].trim();
-                    double latitude=this.parseNmeaLatitude(strValues[4].trim());
-                    double longitude=this.parseNmeaLongitude(strValues[5].trim());
-                    float course = Float.parseFloat(strValues[6].trim());
-                    float speed = Float.parseFloat(strValues[7].trim());
-                    int sats=Integer.parseInt(strValues[8].trim());
-                    //int battery=Integer.parseInt(strValues[9].trim());
-                    //Toast.makeText(mContext, String.valueOf(latitude), Toast.LENGTH_SHORT).show();
-                    if (latitude!=0 && longitude!=0)
-                    {
-                        remoteLocation.setProvider(name);
-                        remoteLocation.setTime(getLongDate(date+" "+time));
-                        remoteLocation.setSpeed(speed);
-                        remoteLocation.setLatitude(latitude);
-                        remoteLocation.setLongitude(longitude);
-                        remoteLocation.setBearing(course);
-                        remoteLocation.setAccuracy((float)sats);
-                        this.addToTrack(remoteLocation);
-                        
-                    }
+                    
+                    //Toast.makeText(mContext, sentence.toString(), Toast.LENGTH_SHORT).show();
+                        String date=strValues[0].trim();
+                        String time=strValues[1].trim();
+                        int age=Integer.parseInt(strValues[2].trim());
+                        String name=strValues[3].trim();
+                        double latitude=this.parseNmeaLatitude(strValues[4].trim());
+                        double longitude=this.parseNmeaLongitude(strValues[5].trim());
+                        float course = Float.parseFloat(strValues[6].trim());
+                        float speed = Float.parseFloat(strValues[7].trim());
+                        int sats=Integer.parseInt(strValues[8].trim());
+                        //int battery=Integer.parseInt(strValues[9].trim());
+                        //Toast.makeText(mContext, String.valueOf(latitude), Toast.LENGTH_SHORT).show();
+                        if (latitude!=0 && longitude!=0)
+                        {
+                            remoteLocation.setProvider(name);
+                            remoteLocation.setTime(getLongDate(date+" "+time));
+                            remoteLocation.setSpeed(speed);
+                            remoteLocation.setLatitude(latitude);
+                            remoteLocation.setLongitude(longitude);
+                            remoteLocation.setBearing(course);
+                            remoteLocation.setAccuracy((float)sats);
+                            this.addToTrack(remoteLocation);
+                            
+                        }
                     
                     
-                    //Toast.makeText(mContext, remoteLocation.toString(), Toast.LENGTH_SHORT).show();
+                    
                     //System.out.println("remote::latlon="+Double.toString(latitude)+","+Double.toString(longitude));
                 } 
                 catch (Exception e)
                 {
-                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
                 
                 
                 
-                
-            //}
-        }
+       
         
     }
     

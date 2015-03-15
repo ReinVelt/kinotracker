@@ -483,6 +483,7 @@ containing a value of this type.
         public static final int sandbox=0x7f0b000a;
         public static final int satellite=0x7f0b0005;
         public static final int selectionDetails=0x7f0b000d;
+        public static final int statusText=0x7f0b001b;
         public static final int strict_sandbox=0x7f0b000b;
         public static final int terrain=0x7f0b0006;
         public static final int wrap_content=0x7f0b000f;

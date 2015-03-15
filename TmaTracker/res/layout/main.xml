@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" 
+    android:rowCount="12"
+    android:columnCount="7"
     >
 
-   
-
-	
     
-   
-     
+  
         
           <TextView
        android:id="@+id/demoTitle"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:text="@string/hello"
-       android:textSize="@dimen/text_small"
+       android:textSize="5pt"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_rowSpan="1"
+        android:layout_columnSpan="6"
        android:textStyle="bold" />
           
      <ScrollView
 		  android:id="@+id/demoScroller"
 		  android:layout_width="match_parent"
-		  android:layout_height="10dp"
+		  android:layout_height="0dp"
+		   android:layout_row="1"
+        android:layout_column="1"
+        android:layout_rowSpan="2"
+        android:layout_columnSpan="6"
 		  android:layout_gravity="left">
 
       <TextView
@@ -41,10 +47,21 @@
         android:id="@+id/map"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-       
+        android:layout_row="3"
+        android:layout_column="1"
+        android:layout_rowSpan="9"
+        android:layout_columnSpan="6"
         class="com.google.android.gms.maps.MapFragment" />
      
-	
+	<TextView
+          android:id="@+id/statusText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/text_small"
+          android:typeface="monospace"
+          android:layout_row="11"
+           android:layout_column="1"
+          android:layout_gravity="left" />
 	
  
-</LinearLayout>
+  </GridLayout>
