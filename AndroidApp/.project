@@ -3,7 +3,7 @@
 	<name>KinoTracker</name>
 	<comment></comment>
 	<projects>
-		<project>UsbSerialLibrary</project>
+		<project>google-play-services_lib</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

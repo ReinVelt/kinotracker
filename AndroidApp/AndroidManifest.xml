@@ -23,7 +23,7 @@
         android:allowBackup="true">
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDWzlZYQFNuljHt5ATb7JAtl6yAinH1m44"/>
+            android:value="AIzaSyD6RZKqed4kJC6xrJqRcrVPXi0sBaRiq0Q"/>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
