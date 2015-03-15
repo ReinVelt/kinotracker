@@ -57,9 +57,9 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 /**
- * A sample Activity demonstrating USB-Serial support.
+ * The main map with your location and the location of the dogs
  *
- * @author mike wakerly (opensource@hoho.com)
+ * @author Rein Velt (rein@mechanicape.com)
  */
 public class MainActivity extends Activity {
 
