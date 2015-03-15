@@ -26,5 +26,8 @@ The Android app stores all positions in the local database and shows a map with 
 *multidog features
 
 
+#documentation
+https://github.com/ReinVelt/kinotracker/edit/master/Documentation/
+
 #join this project?
 * All help is welcome. Don't hesitate to contact us at https://github.com/ReinVelt/kinotracker or http://mechanicape.nl/contact
