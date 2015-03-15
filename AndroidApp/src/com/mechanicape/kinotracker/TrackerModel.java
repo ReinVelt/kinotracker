@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import com.mechanicape.tmatracker.DatabaseHelper;
+import com.mechanicape.kinotracker.DatabaseHelper;
 
 import android.content.Context;
 import android.location.Location;
