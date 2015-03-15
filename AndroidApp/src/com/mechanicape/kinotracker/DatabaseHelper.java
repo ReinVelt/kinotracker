@@ -1,4 +1,4 @@
-package com.mechanicape.tmatracker;
+package com.mechanicape.kinotracker;
 
 
 //import java.text.SimpleDateFormat;

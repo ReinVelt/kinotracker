@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.mechanicape.tmatracker;
+package com.mechanicape.kinotracker;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;

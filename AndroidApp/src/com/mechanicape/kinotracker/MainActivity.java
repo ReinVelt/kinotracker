@@ -15,10 +15,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
  * USA.
  *
- * Project home page: http://mechanicape.com/tmatracker/
+ * Project home page: http://mechanicape.com/kinotracker/
  */
 
-package com.mechanicape.tmatracker;
+package com.mechanicape.kinotracker;
 
 import android.app.Activity;
 import android.content.Context;
