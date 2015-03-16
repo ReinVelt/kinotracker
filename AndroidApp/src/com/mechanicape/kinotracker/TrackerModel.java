@@ -6,6 +6,8 @@ package com.mechanicape.kinotracker;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 import com.mechanicape.kinotracker.DatabaseHelper;
@@ -26,7 +28,7 @@ import android.widget.Toast;
 public final class TrackerModel implements LocationListener{
     public DatabaseHelper db ;
     public Location myLocation;
-    public Location remoteLocation;
+    public Map<String, Location> trackerLocations = new HashMap<String, Location>();
     private final Context mContext;
     protected LocationManager locationManager;
  // flag for GPS status
@@ -53,13 +55,10 @@ public final class TrackerModel implements LocationListener{
     public TrackerModel(Context context) {
         // TODO Auto-generated constructor stub
         myLocation=new Location("me");
-        myLocation.setLongitude(0);
-        myLocation.setLatitude(0);
-        myLocation.setBearing(0);
-        remoteLocation=new Location("tracker");
-        remoteLocation.setLongitude(0);
-        remoteLocation.setLatitude(0);
-        remoteLocation.setBearing(0);
+       //myLocation.setLongitude(0);
+        //myLocation.setLatitude(0);
+       // myLocation.setBearing(0);
+      
         db = new DatabaseHelper(context);
         this.mContext = context;
         getLocation();
@@ -79,15 +78,12 @@ public final class TrackerModel implements LocationListener{
     {
 
         
-            //if (sentence.startsWith("$GPRMC")) {
+
                 try 
                 {
                     
-                    String[] strValues = sentence.split("\t");
-                   
-                    
-                    //Toast.makeText(mContext, sentence.toString(), Toast.LENGTH_SHORT).show();
-                        String date=strValues[0].trim();
+                    String[] strValues = sentence.split("\t");  
+                       String date=strValues[0].trim();
                         String time=strValues[1].trim();
                         int age=Integer.parseInt(strValues[2].trim());
                         String name=strValues[3].trim();
@@ -96,18 +92,19 @@ public final class TrackerModel implements LocationListener{
                         float course = Float.parseFloat(strValues[6].trim());
                         float speed = Float.parseFloat(strValues[7].trim());
                         int sats=Integer.parseInt(strValues[8].trim());
-                        //int battery=Integer.parseInt(strValues[9].trim());
-                        //Toast.makeText(mContext, String.valueOf(latitude), Toast.LENGTH_SHORT).show();
-                        if (latitude!=0 && longitude!=0)
+                        int battery=Integer.parseInt(strValues[9].trim());
+                         if (latitude!=0 && longitude!=0)
                         {
-                            remoteLocation.setProvider(name);
-                            remoteLocation.setTime(getLongDate(date+" "+time));
-                            remoteLocation.setSpeed(speed);
-                            remoteLocation.setLatitude(latitude);
-                            remoteLocation.setLongitude(longitude);
-                            remoteLocation.setBearing(course);
-                            remoteLocation.setAccuracy((float)sats);
-                            this.addToTrack(remoteLocation);
+                            Location remote=new Location(name);
+                            remote.setProvider(name);
+                            remote.setTime(getLongDate(date+" "+time));
+                            remote.setSpeed(speed);
+                            remote.setLatitude(latitude);
+                            remote.setLongitude(longitude);
+                            remote.setBearing(course);
+                            remote.setAccuracy((float)sats);
+                            trackerLocations.put(name, remote);
+                            this.addToTrack(name,getLongDate(date+" "+time),(float)latitude,(float)longitude,speed,course,sats,battery);
                             
                         }
                     
@@ -127,9 +124,9 @@ public final class TrackerModel implements LocationListener{
     }
     
     
-    public void addToTrack(Location location)
+    public void addToTrack(String name,long date,float latitude,float longitude,float speed,float course,int sats,int battery)
     {
-        db.addToTrail(location.getProvider(),location.getTime(), (float) location.getLatitude(), (float) location.getLongitude(), (float) location.getBearing(), (float) location.getSpeed(), 0, 0);
+        db.addToTrail(name,date,latitude, longitude, course, speed, sats, battery);
         
     }
     

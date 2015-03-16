@@ -114,7 +114,7 @@ int id grayscale 0x7f0b0015
 int id holo_dark 0x7f0b0007
 int id holo_light 0x7f0b0008
 int id hybrid 0x7f0b0003
-int id map 0x7f0b001a
+int id map 0x7f0b001b
 int id match_parent 0x7f0b000e
 int id monochrome 0x7f0b0016
 int id none 0x7f0b0002
@@ -123,9 +123,10 @@ int id production 0x7f0b0009
 int id sandbox 0x7f0b000a
 int id satellite 0x7f0b0005
 int id selectionDetails 0x7f0b000d
-int id statusText 0x7f0b001b
+int id statusText 0x7f0b001c
 int id strict_sandbox 0x7f0b000b
 int id terrain 0x7f0b0006
+int id trackerList 0x7f0b001a
 int id wrap_content 0x7f0b000f
 int integer google_play_services_version 0x7f090000
 int layout main 0x7f030000

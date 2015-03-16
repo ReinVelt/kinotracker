@@ -25,8 +25,11 @@ import android.content.Context;
 import android.graphics.Color;
 import android.hardware.usb.UsbManager;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +40,11 @@ import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -74,6 +81,7 @@ public class MainActivity extends Activity {
     private TextView mTitleTextView;
     private TextView mDumpTextView;
     private ScrollView mScrollView;
+    private ListView mTrackerList;
     private GoogleMap map;
     private int RSSICounter=0;
     private int  comm_state=COMM_STATE_GPS;
@@ -116,6 +124,7 @@ public class MainActivity extends Activity {
         mTitleTextView = (TextView) findViewById(R.id.demoTitle);
         mDumpTextView = (TextView) findViewById(R.id.demoText);
         mScrollView = (ScrollView) findViewById(R.id.demoScroller);
+        mTrackerList=(ListView) findViewById(R.id.trackerList);
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         map.setMyLocationEnabled(true);
         map.setIndoorEnabled(true);
@@ -253,26 +262,43 @@ public class MainActivity extends Activity {
                         //Toast.makeText(this, "my", 0).show();
                     }
                     
-                    if (trackerModel.remoteLocation.getLatitude()!=0)
-                    {                                                                                                                                                                                                                                                                                                                                   
-                        MarkerOptions remoteOptions=new MarkerOptions();
-                        remoteOptions.title(trackerModel.remoteLocation.getProvider());
-                        remoteOptions.position(new LatLng(trackerModel.remoteLocation.getLatitude(),trackerModel.remoteLocation.getLongitude()));
-                        String text=trackerModel.remoteLocation.getProvider();;
-                        remoteOptions.snippet(text);
-                        remoteOptions.flat(false);
-                        BitmapDescriptor remoteIcon=BitmapDescriptorFactory.fromResource(R.drawable.icon_targetlocation);
-                        remoteOptions.icon(remoteIcon);
-                        map.addMarker(remoteOptions);
-                        //Toast.makeText(this, "remote", 0).show();
-                    }
+                    int trackerCount=trackerModel.trackerLocations.size();
+                    ArrayList<String> myStringArray1 = new ArrayList<String>();
                     
+                    Iterator<Entry<String, Location>> it = trackerModel.trackerLocations.entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry pair = (Map.Entry)it.next();
+                        String name=(String) pair.getKey();
+                        Location trackerLocation=(Location)pair.getValue();
+                        System.out.println(pair.getKey() + " = " + pair.getValue());
+                        it.remove(); // avoids a ConcurrentModificationException
+                    
+                        if (trackerLocation.getLatitude()!=0)
+                        {                                                                                                                                                                                                                                                                                                                                   
+                            MarkerOptions remoteOptions=new MarkerOptions();
+                            remoteOptions.title(trackerLocation.getProvider());
+                            remoteOptions.position(new LatLng(trackerLocation.getLatitude(),trackerLocation.getLongitude()));
+                            String text=trackerLocation.getProvider();;
+                            remoteOptions.snippet(text);
+                            remoteOptions.flat(false);
+                            BitmapDescriptor remoteIcon=BitmapDescriptorFactory.fromResource(R.drawable.icon_targetlocation);
+                            remoteOptions.icon(remoteIcon);
+                            map.addMarker(remoteOptions);
+                            myStringArray1.add(name);
+                            //Toast.makeText(this, "remote", 0).show();
+                        }
+                        ArrayAdapter<String> adapter;
+                        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myStringArray1);  
+                        mTrackerList.setAdapter(adapter);
+                        //mTrackerList.addView(myListView);
+                    }
+             
                     
                     //float toTargetDirection=trackerModel.myLocation.bearingTo(trackerModel.remoteLocation);
                     //float toTargetDistance=trackerModel.myLocation.distanceTo(trackerModel.remoteLocation);
-                    LatLng cameraLatLng=new LatLng(trackerModel.remoteLocation.getLatitude(),trackerModel.remoteLocation.getLongitude());
+                    //LatLng cameraLatLng=new LatLng(trackerLocation.getLatitude(),trackerLocation.getLongitude());
                     //CameraPosition.builder(cameraLatLng).bearing(trackerModel.myLocation.getBearing()).build();
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng,17));
+                   // map.animateCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng,17));
                     trackerModel.isUpdatedSinceLast=false;
                     
                     drawHistoryTrail();
