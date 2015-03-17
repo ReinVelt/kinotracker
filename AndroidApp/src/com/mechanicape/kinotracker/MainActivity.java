@@ -28,6 +28,9 @@ import android.hardware.usb.UsbManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -84,8 +87,6 @@ public class MainActivity extends Activity {
     private ListView mTrackerList;
     private GoogleMap map;
     private int RSSICounter=0;
-    private int  comm_state=COMM_STATE_GPS;
-    private int comm_state_sub=0;
     private String[] receiveBuffer;
     public static final  int COMM_STATE_GPS=1;
     public static final int COMM_STATE_AT=2;
@@ -131,15 +132,31 @@ public class MainActivity extends Activity {
         map.setContentDescription("Kinotracker shows a map with the locations of tracked objects");
         map.setBuildingsEnabled(true);
         map.setTrafficEnabled(true);
-        map.setMapType(map.MAP_TYPE_TERRAIN);
+        //map.setMapType(map.MAP_TYPE_TERRAIN);
         trackerModel=new TrackerModel(this);
         drawHistoryTrail();
-  
+        
+        mTrackerList.setOnItemClickListener(new OnItemClickListener() {
+
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                
+                String selectedTrackerName=(String) parent.getItemAtPosition(position);        
+                Location thisLocation=trackerModel.trackerLocations.get(selectedTrackerName);
+                LatLng cameraLatLng=new LatLng(thisLocation.getLatitude(),thisLocation.getLongitude());
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng,17));
+               
+            }
+
+        });
+
+        
     }
     
     public void getRssiData()
     {
-        comm_state=COMM_STATE_AT;
+        
         try {
             if (mSerialDevice!=null)
             {
@@ -153,13 +170,13 @@ public class MainActivity extends Activity {
                 //mSerialDevice.write("ATI5\r\n".getBytes(),500);
                 //Thread.sleep(1000);
                 //getdata rssi
-                comm_state_sub=COMM_STATE_SUB_RSSI;
+              
                 mSerialDevice.write("ATI7\r\n".getBytes(),500);
                 Thread.sleep(1000);
                 
                 
                 //getdata tdm
-                comm_state_sub=COMM_STATE_SUB_TDM;
+                
                 mSerialDevice.write("ATI6\r\n".getBytes(),500);
                 Thread.sleep(1000);
                 mSerialDevice.write("ATO\r\n".getBytes(),500);
@@ -171,7 +188,7 @@ public class MainActivity extends Activity {
         {
             Toast.makeText(this.getApplicationContext(), "WRITE:"+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        comm_state=COMM_STATE_GPS;
+       
         
     }
 
@@ -262,7 +279,6 @@ public class MainActivity extends Activity {
                         //Toast.makeText(this, "my", 0).show();
                     }
                     
-                    int trackerCount=trackerModel.trackerLocations.size();
                     ArrayList<String> myStringArray1 = new ArrayList<String>();
                     
                     Iterator<Entry<String, Location>> it = trackerModel.trackerLocations.entrySet().iterator();
@@ -270,8 +286,8 @@ public class MainActivity extends Activity {
                         Map.Entry pair = (Map.Entry)it.next();
                         String name=(String) pair.getKey();
                         Location trackerLocation=(Location)pair.getValue();
-                        System.out.println(pair.getKey() + " = " + pair.getValue());
-                        it.remove(); // avoids a ConcurrentModificationException
+                        //System.out.println(pair.getKey() + " = " + pair.getValue());
+                        //it.remove(); // avoids a ConcurrentModificationException
                     
                         if (trackerLocation.getLatitude()!=0)
                         {                                                                                                                                                                                                                                                                                                                                   
@@ -280,7 +296,8 @@ public class MainActivity extends Activity {
                             remoteOptions.position(new LatLng(trackerLocation.getLatitude(),trackerLocation.getLongitude()));
                             String text=trackerLocation.getProvider();;
                             remoteOptions.snippet(text);
-                            remoteOptions.flat(false);
+                            //remoteOptions.rotation(trackerLocation.getBearing());
+                            remoteOptions.flat(true);
                             BitmapDescriptor remoteIcon=BitmapDescriptorFactory.fromResource(R.drawable.icon_targetlocation);
                             remoteOptions.icon(remoteIcon);
                             map.addMarker(remoteOptions);

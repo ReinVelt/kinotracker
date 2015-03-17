@@ -58,7 +58,7 @@ public final class TrackerModel implements LocationListener{
        //myLocation.setLongitude(0);
         //myLocation.setLatitude(0);
        // myLocation.setBearing(0);
-      
+       
         db = new DatabaseHelper(context);
         this.mContext = context;
         getLocation();
@@ -74,11 +74,13 @@ public final class TrackerModel implements LocationListener{
       
     }
     
+    public void addTrackerToList(String name,Location location)
+    {
+        trackerLocations.put(name, location);
+    }
+    
     public void addNmeaData(String sentence)
     {
-
-        
-
                 try 
                 {
                     
@@ -103,24 +105,16 @@ public final class TrackerModel implements LocationListener{
                             remote.setLongitude(longitude);
                             remote.setBearing(course);
                             remote.setAccuracy((float)sats);
-                            trackerLocations.put(name, remote);
-                            this.addToTrack(name,getLongDate(date+" "+time),(float)latitude,(float)longitude,speed,course,sats,battery);
-                            
+                            addTrackerToList(name, remote);
+                            this.addToTrack(name,getLongDate(date+" "+time),(float)latitude,(float)longitude,speed,course,sats,battery);               
                         }
-                    
-                    
-                    
-                    //System.out.println("remote::latlon="+Double.toString(latitude)+","+Double.toString(longitude));
+                 //System.out.println("remote::latlon="+Double.toString(latitude)+","+Double.toString(longitude));
                 } 
                 catch (Exception e)
                 {
                     //Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-                
-                
-                
-       
-        
+  
     }
     
     
