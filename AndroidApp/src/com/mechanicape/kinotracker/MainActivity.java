@@ -134,7 +134,7 @@ public class MainActivity extends Activity {
             map.setContentDescription("Kinotracker shows a map with the locations of tracked objects");
             map.setBuildingsEnabled(true);
             map.setTrafficEnabled(true);
-            //map.setMapType(map.MAP_TYPE_TERRAIN);
+            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             trackerModel=new TrackerModel(this);
             drawHistoryTrail();
             
@@ -277,13 +277,16 @@ public class MainActivity extends Activity {
                     
                     if(trackerModel.myLocation!=null)
                     {
-                       //MarkerOptions myOptions=new MarkerOptions();
-                        //myOptions.title("My");
-                        //myOptions.position(new LatLng(trackerModel.myLocation.getLatitude(),trackerModel.myLocation.getLongitude()));
-                        //myOptions.rotation(trackerModel.myLocation.getBearing());
-                        //myOptions.flat(true);
-                        //map.addMarker(myOptions);
-                        //Toast.makeText(this, "my", 0).show();
+                       /*MarkerOptions myOptions=new MarkerOptions();
+                       myOptions.title("My");
+                       myOptions.position(new LatLng(trackerModel.myLocation.getLatitude(),trackerModel.myLocation.getLongitude()));
+                       myOptions.rotation(trackerModel.myLocation.getBearing());
+                       myOptions.flat(false);
+                       BitmapDescriptor myIcon=BitmapDescriptorFactory.fromResource(R.drawable.icon_mylocation);
+                       myOptions.icon(myIcon);
+                      
+                       map.addMarker(myOptions);
+                       Toast.makeText(this, "my", 0).show();*/
                     }
                     
                     ArrayList<String> myStringArray1 = new ArrayList<String>();
@@ -304,7 +307,7 @@ public class MainActivity extends Activity {
                             String text=trackerLocation.getProvider();;
                             remoteOptions.snippet(text);
                             //remoteOptions.rotation(trackerLocation.getBearing());
-                            remoteOptions.flat(true);
+                            remoteOptions.flat(false);
                             BitmapDescriptor remoteIcon=BitmapDescriptorFactory.fromResource(R.drawable.icon_targetlocation);
                             remoteOptions.icon(remoteIcon);
                             map.addMarker(remoteOptions);
