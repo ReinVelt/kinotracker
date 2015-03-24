@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
         
-<<<<<<< HEAD
+
          <TextView
 	       android:id="@+id/demoTitle"
 	       android:layout_width="match_parent"
@@ -13,62 +13,7 @@
 	       android:textSize="5pt"
 	       android:textStyle="bold" />
         <TextView
-=======
-          <TextView
-       android:id="@+id/demoTitle"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:text="@string/hello"
-       android:textSize="5pt"
-        android:layout_row="0"
-        android:layout_column="0"
-        android:layout_rowSpan="1"
-        android:layout_columnSpan="7"
-       android:textStyle="bold" />
-          
-           <ListView
-        android:id="@+id/trackerList"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_column="0"
-        android:layout_columnSpan="7"
-        android:layout_row="3"
-        android:layout_rowSpan="1"
-        android:drawSelectorOnTop="true" />
-     <ScrollView
-		  android:id="@+id/demoScroller"
-		  android:layout_width="match_parent"
-		  android:layout_height="0dp"
-		   android:layout_row="1"
-        android:layout_column="1"
-        android:layout_rowSpan="2"
-        android:layout_columnSpan="6"
-		  android:layout_gravity="left">
 
-      <TextView
-          android:id="@+id/demoText"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:textSize="@dimen/text_small"
-          android:typeface="monospace"
-          android:layout_gravity="left" />
-  </ScrollView>
-         
-   
-
-	 <fragment
-	     android:id="@+id/map"
-	     android:layout_width="match_parent"
-	     android:layout_height="match_parent"
-	     android:layout_column="0"
-	     android:layout_columnSpan="7"
-	     android:layout_gravity="fill_horizontal"
-	     android:layout_row="4"
-	     android:layout_rowSpan="3"
-	     class="com.google.android.gms.maps.MapFragment" />
-     
-	<TextView
->>>>>>> refs/remotes/origin/development
           android:id="@+id/statusText"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -94,6 +39,7 @@
 	     android:layout_height="match_parent"
 	     android:layout_gravity="fill_horizontal"
 	     class="com.google.android.gms.maps.MapFragment" />
+	 
 	<SlidingDrawer
 	    android:layout_width="wrap_content"
         android:id="@+id/drawer" 
@@ -114,8 +60,8 @@
 	        android:layout_width="wrap_content"
 	        android:orientation="horizontal"
 	        android:layout_height="wrap_content"
-	        android.textcolor="#ffffff"
-	        
+	        android:textColor="#ffffff"
+	        android:background="#000000"
 	        android:drawSelectorOnTop="true" />
     </SlidingDrawer>
   </RelativeLayout>

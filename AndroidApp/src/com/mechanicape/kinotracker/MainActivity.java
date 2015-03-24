@@ -88,11 +88,11 @@ public class MainActivity extends Activity {
     private GoogleMap map;
     private int RSSICounter=0;
     private String[] receiveBuffer;
-    public static final  int COMM_STATE_GPS=1;
-    public static final int COMM_STATE_AT=2;
-    public static final int COMM_STATE_SUB_RSSI=1;
-    public static final int COMM_STATE_SUB_TDM=2;
-    public static final int COMM_STATE_SUB_CFG=3;
+   /// public static final  int COMM_STATE_GPS=1;
+   // public static final int COMM_STATE_AT=2;
+    //public static final int COMM_STATE_SUB_RSSI=1;
+    //public static final int COMM_STATE_SUB_TDM=2;
+    //public static final int COMM_STATE_SUB_CFG=3;
     //private MyLocationOverlay myLocationOverlay;
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
 
@@ -127,30 +127,37 @@ public class MainActivity extends Activity {
         mScrollView = (ScrollView) findViewById(R.id.demoScroller);
         mTrackerList=(ListView) findViewById(R.id.trackerList);
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-        map.setMyLocationEnabled(true);
-        map.setIndoorEnabled(true);
-        map.setContentDescription("Kinotracker shows a map with the locations of tracked objects");
-        map.setBuildingsEnabled(true);
-        map.setTrafficEnabled(true);
-        //map.setMapType(map.MAP_TYPE_TERRAIN);
-        trackerModel=new TrackerModel(this);
-        drawHistoryTrail();
-        
-        mTrackerList.setOnItemClickListener(new OnItemClickListener() {
-
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                
-                String selectedTrackerName=(String) parent.getItemAtPosition(position);        
-                Location thisLocation=trackerModel.trackerLocations.get(selectedTrackerName);
-                LatLng cameraLatLng=new LatLng(thisLocation.getLatitude(),thisLocation.getLongitude());
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng,17));
-               
-            }
-
-        });
-
+        if (map!=null)
+        {
+            map.setMyLocationEnabled(true);
+            map.setIndoorEnabled(true);
+            map.setContentDescription("Kinotracker shows a map with the locations of tracked objects");
+            map.setBuildingsEnabled(true);
+            map.setTrafficEnabled(true);
+            //map.setMapType(map.MAP_TYPE_TERRAIN);
+            trackerModel=new TrackerModel(this);
+            drawHistoryTrail();
+            
+            mTrackerList.setOnItemClickListener(new OnItemClickListener() {
+    
+    
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    
+                    String selectedTrackerName=(String) parent.getItemAtPosition(position);        
+                    Location thisLocation=trackerModel.trackerLocations.get(selectedTrackerName);
+                    LatLng cameraLatLng=new LatLng(thisLocation.getLatitude(),thisLocation.getLongitude());
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(cameraLatLng,17));
+                   
+                }
+    
+            });
+        }
+        else
+        {
+            
+            Toast.makeText(this.getApplicationContext(), "could not load google Maps", Toast.LENGTH_LONG).show();
+        }
         
     }
     
@@ -259,7 +266,7 @@ public class MainActivity extends Activity {
     
     private void updateMap()
     {
-        //Toast.makeText(this, "update", 0).show();
+        Toast.makeText(this, "update", Toast.LENGTH_SHORT).show();
         try {
             
         
